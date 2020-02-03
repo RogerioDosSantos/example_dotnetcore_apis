@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using Xunit;
@@ -10,7 +12,8 @@ namespace DotNetCoreApis.Tools.Qa
 
         public TestCertificateTools()
         {
-            _certificateTools = new CertificateTools();
+            ILogger logger = Mock.Of<ILogger>();
+            _certificateTools = new CertificateTools(logger);
         }
 
         [Fact]

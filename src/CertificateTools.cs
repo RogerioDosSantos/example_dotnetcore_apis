@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -8,9 +9,11 @@ namespace DotNetCoreApis.Tools
 {
     public class CertificateTools
     {
-        public CertificateTools()
-        {
+        private readonly ILogger _logger = null;
 
+        public CertificateTools(ILogger logger)
+        {
+            _logger = logger;
         }
 
         /// <summary>
@@ -40,8 +43,15 @@ namespace DotNetCoreApis.Tools
                    new X509EnhancedKeyUsageExtension(
                        new OidCollection { new Oid("1.9.7.9.1.0.2.7.0") }, false));
                 certificateRequest.CertificateExtensions.Add(nameBuilder.Build());
-                var certificate = certificateRequest.CreateSelfSigned(new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), new DateTimeOffset(expiractionDate));
-                certificate.FriendlyName = certificateName;
+                X509Certificate2 certificate = certificateRequest.CreateSelfSigned(new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), new DateTimeOffset(expiractionDate));
+                try
+                {
+                    certificate.FriendlyName = certificateName;
+                }
+                catch (Exception) 
+                {
+                    _logger?.LogWarning("Friendly Name is not supported on linux platform. For more information: https://github.com/dotnet/aspnetcore/issues/2038");
+                }
                 return new X509Certificate2(certificate.Export(X509ContentType.Pfx, certificatePassword), certificatePassword, X509KeyStorageFlags.MachineKeySet);
             }
         }

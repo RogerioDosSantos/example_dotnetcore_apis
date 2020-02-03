@@ -19,7 +19,7 @@ namespace DotNetCoreApis.Controllers
         public CertificateController(ILogger<CertificateController> logger)
         {
             _logger = logger;
-            _certificateTools = new CertificateTools();
+            _certificateTools = new CertificateTools(_logger);
         }
 
         /// <summary>
