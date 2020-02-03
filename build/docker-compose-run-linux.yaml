@@ -1,0 +1,13 @@
+# Run (Linux)
+
+version: "3"
+services:
+
+  build:
+    image: "rogersantos/dotnetcore_apis:linux"
+    # entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+

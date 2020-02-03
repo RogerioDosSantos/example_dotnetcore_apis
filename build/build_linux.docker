@@ -1,0 +1,38 @@
+# Build Linux
+
+## Stage
+ARG stage_image=""
+FROM "${stage_image}" as stage
+
+## Build
+FROM microsoft/dotnet:2.2-sdk AS build
+WORKDIR /workspace
+
+### Install and Configure ZScale Certificate
+ENV http_proxy=http://gateway.zscaler.net:9480 
+ENV https_proxy=http://gateway.zscaler.net:9480 
+COPY --from=stage /workspace/zscale/zscale.crt /usr/local/share/ca-certificates
+RUN echo "*** Install and Configure ZScale Certificate" \
+  && update-ca-certificates \
+  && echo "*** Install and Configure ZScale Certificate - DONE" 
+
+### Compile Project
+COPY ./src /workspace/src
+RUN echo "*** Install and Configure ZScale Certificate" \
+  && cd /workspace/src \
+  && dotnet restore \
+  && dotnet publish -c Release -o /workspace/stage/release \
+  && echo "*** Install and Configure ZScale Certificate - DONE" 
+
+## Release
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS dotnetcore_apis_release
+WORKDIR /workspace
+
+### Install Release 
+COPY --from=build /workspace/stage/release /workspace/bin
+ENTRYPOINT ["dotnet", "/workspace/bin/dotnetcore_apis.dll"]
+ENV ASPNETCORE_URLS=http://+:8000
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV NUGET_XMLDOC_MODE=skip
+EXPOSE 8000
+
