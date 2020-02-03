@@ -6,5 +6,5 @@ All examples uses Open API with a [Swagger](http://rogeriodossantos.github.io/Wi
 
 ## Examples
 
-- Create Certificate
+- **Create Certificate**: *CertificateController - CreateCertificate function*
 
