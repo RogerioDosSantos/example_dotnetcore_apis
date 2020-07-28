@@ -70,5 +70,17 @@ namespace DotNetCoreApis.Tools
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Export a certificate to a PEM format string
+        /// </summary>
+        /// <param name="fullCertificate">The full certificate with the private key</param>
+        /// <returns>A public certificate</returns>
+        public X509Certificate2 GetPublicCertificate(X509Certificate fullCertificate)
+        {
+            if (fullCertificate is null)
+                return null;
+            X509Certificate2 publicCertificate = new X509Certificate2(fullCertificate.Export(X509ContentType.Cert));
+            return publicCertificate;
+        }
     }
 }
