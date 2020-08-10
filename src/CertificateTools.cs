@@ -8,7 +8,15 @@ using System.Text;
 
 namespace DotNetCoreApis.Tools
 {
-    public class CertificateTools
+    public interface ICertificateTools
+    {
+        X509Certificate2 CreateSignedPrivateCertificate(string certificateName, string certificatePassword, DateTime expiractionDate);
+        string ExportToPEM(X509Certificate certificate);
+        X509Certificate2 GetCertificateFromFile(string certificatePath, string certificatePassword);
+        X509Certificate2 GetPublicCertificate(X509Certificate fullCertificate);
+    }
+
+    public class CertificateTools : ICertificateTools
     {
         private readonly ILogger _logger = null;
 

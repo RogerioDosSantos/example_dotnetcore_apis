@@ -15,11 +15,11 @@ namespace DotNetCoreApis.Controllers
     public class CertificateController : ControllerBase
     {
         private readonly ILogger _logger = null;
-        private CertificateTools _certificateTools = null;
-        public CertificateController(ILogger<CertificateController> logger)
+        private ICertificateTools _certificateTools = null;
+        public CertificateController(ILogger<CertificateController> logger, ICertificateTools certificateTools)
         {
             _logger = logger;
-            _certificateTools = new CertificateTools(_logger);
+            _certificateTools = certificateTools;
         }
 
         /// <summary>

@@ -15,14 +15,17 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
+using DotNetCoreApis.Tools;
 
 namespace DotNetCoreApis
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILoggerFactory _loggerFactory;
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            _loggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -65,6 +68,11 @@ namespace DotNetCoreApis
             string dataProtectionKeyDir = Path.Combine(Path.GetTempPath(), "dotnetcore_apis", "data_protection", "keys");
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyDir));
+
+            // Tools Dependency Injection
+            services.AddSingleton<IJsonWebTokenTools>(new JsonWebTokenTools(_loggerFactory.CreateLogger(typeof(JsonWebTokenTools))));
+            services.AddSingleton<ICertificateTools>(new CertificateTools(_loggerFactory.CreateLogger(typeof(CertificateTools))));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
