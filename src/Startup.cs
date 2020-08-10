@@ -13,6 +13,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DotNetCoreApis
 {
@@ -58,6 +60,11 @@ namespace DotNetCoreApis
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            // Data Protection Setup
+            string dataProtectionKeyDir = Path.Combine(Path.GetTempPath(), "dotnetcore_apis", "data_protection", "keys");
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyDir));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
