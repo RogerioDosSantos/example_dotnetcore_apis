@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -29,15 +30,15 @@ namespace DotNetCoreApis.Tools
             nameBuilder.AddIpAddress(IPAddress.Loopback);
             nameBuilder.AddIpAddress(IPAddress.IPv6Loopback);
             nameBuilder.AddDnsName("localhost");
-            nameBuilder.AddDnsName(Environment.MachineName);            
+            nameBuilder.AddDnsName(Environment.MachineName);
             X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={certificateName}");
             using (RSA rsa = RSA.Create(2048))
             {
-                CertificateRequest certificateRequest = new CertificateRequest(distinguishedName, rsa, 
+                CertificateRequest certificateRequest = new CertificateRequest(distinguishedName, rsa,
                     HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                 certificateRequest.CertificateExtensions.Add(
-                    new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment 
-                    | X509KeyUsageFlags.KeyEncipherment 
+                    new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment
+                    | X509KeyUsageFlags.KeyEncipherment
                     | X509KeyUsageFlags.DigitalSignature, false));
                 certificateRequest.CertificateExtensions.Add(
                    new X509EnhancedKeyUsageExtension(
@@ -48,7 +49,7 @@ namespace DotNetCoreApis.Tools
                 {
                     certificate.FriendlyName = certificateName;
                 }
-                catch (Exception) 
+                catch (Exception)
                 {
                     _logger?.LogWarning("Friendly Name is not supported on linux platform. For more information: https://github.com/dotnet/aspnetcore/issues/2038");
                 }
@@ -81,6 +82,31 @@ namespace DotNetCoreApis.Tools
                 return null;
             X509Certificate2 publicCertificate = new X509Certificate2(fullCertificate.Export(X509ContentType.Cert));
             return publicCertificate;
+        }
+
+        /// <summary>
+        /// Get the certificate from a certificate file
+        /// </summary>
+        /// <param name="certificatePath">Path of the certificate</param>
+        /// <param name="certificatePassword">Password of the certificate</param>
+        /// <returns>A public certificate</returns>
+        public X509Certificate2 GetCertificateFromFile(string certificatePath, string certificatePassword)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(certificatePath) || !File.Exists(certificatePath))
+                {
+                    _logger?.LogError("Invalid parameters.");
+                    return null;
+                }
+                X509Certificate2 certificate = new X509Certificate2(certificatePath, certificatePassword);
+                return certificate;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
+                return null;
+            }
         }
     }
 }
