@@ -1,0 +1,17 @@
+# Build (Linux)
+
+version: "3"
+services:
+
+  dotnetcore_apis:
+    image: "rogersantos/dotnetcore_apis:linux"
+    build:
+      context: ../
+      dockerfile: ./build/build_linux.docker
+      args:
+        stage_image: "dotnetcore_apis_stage:linux"
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+

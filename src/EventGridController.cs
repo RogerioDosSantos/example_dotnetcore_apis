@@ -160,12 +160,9 @@ namespace DotNetCoreApis.Controllers
         /// <param name="credentialsAzureSubscriptionId">The Azure Subscription Id. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
         /// <param name="credentialsTenantId">Tenant id that will be used on the URL to reach the login for having the azure credentials (https://login.windows.net/{tenantId})</param>
         /// <param name="credentialsClientId">Identifier of the client requesting the token. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
-        /// <param name="domainName">The name of the domain where you want to subscribe the event.</param>
         /// <param name="credentialsClientSecret">Secret of the client requesting the token.</param>
         /// <param name="resourceGroupName">The name of the resource group within the user subscription.</param>
         /// <param name="filter">Filter that will be executed on the search. E.g.: contains(name, 'mydomain')</param>
-        /// <param name="topicName">Name of the topic.</param>
-        /// <param name="domainLocation">Location of the resource that will create the topic. E.g.: westus2</param>
         /// <response code="200">Success</response>
         /// <response code="406">Invalid Parameter Value</response>
         /// <response code="400">Invalid Parameter Format</response>
@@ -341,12 +338,6 @@ namespace DotNetCoreApis.Controllers
         /// Publish an event on the Event Grid
         /// </summary>
         /// <param name="topicHostName"></param>
-        /// <param name="credentialsAzureSubscriptionId"></param>
-        /// <param name="credentialsClientId"></param>
-        /// <param name="credentialsClientSecret"></param>
-        /// <param name="topicDomain"></param>
-        /// <param name="credentialsTenantId"></param>
-        /// <param name="eventPayload"></param>
         /// <param name="dataVersion"></param>
         /// <param name="topicKey"></param>
         /// <param name="topic"></param>

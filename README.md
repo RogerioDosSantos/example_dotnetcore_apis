@@ -13,7 +13,7 @@ The goal of the example is not to provide a full implementation but keep the cod
 From this folder execute:
 
 ```shell
-docker-compose -f ./build/docker-compose-build-linux.yaml build
+docker-compose -f ./build/docker-compose.yaml build
 ```
 
 ## How to Run
@@ -21,10 +21,10 @@ docker-compose -f ./build/docker-compose-build-linux.yaml build
 From this folder execute:
 
 ```shell
-docker-compose -f ./build/docker-compose-run-linux.yaml up -d
+docker-compose -f ./build/docker-compose.yaml up -d
 ```
 
-Than you can connect in the following URL:
+Than you can connect in the following URL. The Swagger documentation will be displayed:
 
 [http://localhost:8000](http://localhost:8000)
 
