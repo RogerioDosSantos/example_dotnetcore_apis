@@ -31,4 +31,4 @@ Than you can connect in the following URL. The Swagger documentation will be dis
 ## Examples
 
 - **Create Certificate**: [/api/Certificate/Certificate](http://localhost:8000/api/Certificate/Certificate?certificateName=certificate_name&certificatePassword=certificate_password&expirationInYears=10)
-
+- [Event Grid]( ./doc/event_grid/event_grid.md )

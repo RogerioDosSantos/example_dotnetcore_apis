@@ -155,6 +155,39 @@ namespace DotNetCoreApis.Controllers
         }
 
         /// <summary>
+        /// Remove a domain. In case topics are registered on this domain, all topics will be removed.
+        /// </summary>
+        /// <param name="credentialsAzureSubscriptionId">The Azure Subscription Id. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
+        /// <param name="credentialsTenantId">Tenant id that will be used on the URL to reach the login for having the azure credentials (https://login.windows.net/{tenantId})</param>
+        /// <param name="credentialsClientId">Identifier of the client requesting the token. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
+        /// <param name="domainName">The name of the domain where you want to subscribe the event.</param>
+        /// <param name="credentialsClientSecret">Secret of the client requesting the token.</param>
+        /// <param name="resourceGroupName">The name of the resource group within the user subscription.</param>
+        /// <response code="200">Success</response>
+        /// <response code="406">Invalid Parameter Value</response>
+        /// <response code="400">Invalid Parameter Format</response>
+        /// <response code="500">Internal Error</response>
+        [HttpDelete("RemoveDomain")]
+        public async Task<bool> RemoveDomain(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId,
+            string credentialsClientSecret, string domainName, string resourceGroupName)
+        {
+            try
+            {
+                //Management SDKs (Microsoft.Azure.Management.EventGrid)
+                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(
+                    credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                managementClient.SubscriptionId = credentialsAzureSubscriptionId;
+                await managementClient.Domains.DeleteAsync(resourceGroupName: resourceGroupName, domainName: domainName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
+                return false;
+            }
+        }
+
+        /// <summary>
         /// List the Domains in a resource group
         /// </summary>
         /// <param name="credentialsAzureSubscriptionId">The Azure Subscription Id. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
@@ -331,6 +364,39 @@ namespace DotNetCoreApis.Controllers
             {
                 _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Remove topic of an specific Event Grid Domain
+        /// </summary>
+        /// <param name="credentialsAzureSubscriptionId">The Azure Subscription Id. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
+        /// <param name="credentialsTenantId">Tenant id that will be used on the URL to reach the login for having the azure credentials (https://login.windows.net/{tenantId})</param>
+        /// <param name="credentialsClientId">Identifier of the client requesting the token. ("xxxxx-xxxx-xx-xxxx-xxx")</param>
+        /// <param name="domainName">The name of the domain where you want to subscribe the event.</param>
+        /// <param name="credentialsClientSecret">Secret of the client requesting the token.</param>
+        /// <param name="resourceGroupName">The name of the resource group within the user subscription.</param>
+        /// <param name="topicName">Name of the topic.</param>
+        /// <response code="200">Success</response>
+        /// <response code="406">Invalid Parameter Value</response>
+        /// <response code="400">Invalid Parameter Format</response>
+        /// <response code="500">Internal Error</response>
+        [HttpDelete("RemoveDomainTopic")]
+        public async Task<bool> RemoveDomainTopics(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId,
+            string credentialsClientSecret, string resourceGroupName, string domainName, string topicName)
+        {
+            try
+            {
+                //Management SDKs (Microsoft.Azure.Management.EventGrid)
+                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                managementClient.SubscriptionId = credentialsAzureSubscriptionId;
+                await managementClient.DomainTopics.DeleteAsync(resourceGroupName: resourceGroupName, domainName: domainName, domainTopicName: topicName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
+                return false;
             }
         }
 
