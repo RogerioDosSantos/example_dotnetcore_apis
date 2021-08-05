@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Azure.Management.EventGrid;
-using Microsoft.Rest;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using System.Net.Http;
-using System.Threading;
-using System.Net.Http.Headers;
-using Microsoft.Azure.Management.EventGrid.Models;
 using Microsoft.Azure.EventGrid;
-using System.Collections.Generic;
 using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Azure.Management.EventGrid;
+using Microsoft.Azure.Management.EventGrid.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.Rest;
 using Microsoft.Rest.Azure;
 
 //Event Grid API documentation
@@ -20,11 +20,11 @@ using Microsoft.Rest.Azure;
 namespace DotNetCoreApis.Controllers
 {
     public class CustomLoginCredentials : ServiceClientCredentials
-    {        
+    {
         private string AuthenticationToken { get; set; }
-        private string _tenantId = null;
-        private string _clientId = null;
-        private string _clientSecret = null;
+        private readonly string _tenantId = null;
+        private readonly string _clientId = null;
+        private readonly string _clientSecret = null;
 
 
         public CustomLoginCredentials(string tenantId, string clientId, string clientSecret)
@@ -36,19 +36,19 @@ namespace DotNetCoreApis.Controllers
 
         public override void InitializeServiceClient<T>(ServiceClient<T> client)
         {
-            var authenticationContext = new AuthenticationContext($"https://login.windows.net/{_tenantId}");
-            var credential = new ClientCredential(clientId: _clientId, clientSecret: _clientSecret);
-            var result = authenticationContext.AcquireTokenAsync(resource: "https://management.core.windows.net/", clientCredential: credential).GetAwaiter().GetResult();
-            if (result == null) 
+            AuthenticationContext authenticationContext = new AuthenticationContext($"https://login.windows.net/{_tenantId}");
+            ClientCredential credential = new ClientCredential(clientId: _clientId, clientSecret: _clientSecret);
+            AuthenticationResult result = authenticationContext.AcquireTokenAsync(resource: "https://management.core.windows.net/", clientCredential: credential).GetAwaiter().GetResult();
+            if (result == null)
                 throw new InvalidOperationException("Failed to obtain the JWT token");
             AuthenticationToken = result.AccessToken;
         }
 
         public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (request == null) 
+            if (request == null)
                 throw new ArgumentNullException("request");
-            if (AuthenticationToken == null) 
+            if (AuthenticationToken == null)
                 throw new InvalidOperationException("Token Provider Cannot Be Null");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationToken);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -99,7 +99,7 @@ namespace DotNetCoreApis.Controllers
         /// <response code="400">Invalid Parameter Format</response>
         /// <response code="500">Internal Error</response>
         [HttpPost("RegisterTopic")]
-        public async Task<Topic> RegisterTopic(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId, string credentialsClientSecret, 
+        public async Task<Topic> RegisterTopic(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId, string credentialsClientSecret,
             string resourceGroupName, string topicLocation, string topicName)
         {
             try
@@ -280,7 +280,7 @@ namespace DotNetCoreApis.Controllers
                 EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 DomainSharedAccessKeys domainKeys = await managementClient.Domains.RegenerateKeyAsync(
-                    resourceGroupName: resourceGroupName, 
+                    resourceGroupName: resourceGroupName,
                     domainName: domainName,
                     keyName: key == AccessKeys.key1 ? "key1" : "key2");
                 return domainKeys;
@@ -307,7 +307,7 @@ namespace DotNetCoreApis.Controllers
         /// <response code="400">Invalid Parameter Format</response>
         /// <response code="500">Internal Error</response>
         [HttpPost("RegisterDomainTopic")]
-        public async Task<DomainTopic> RegisterDomainTopic(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId, 
+        public async Task<DomainTopic> RegisterDomainTopic(string credentialsAzureSubscriptionId, string credentialsTenantId, string credentialsClientId,
             string domainName, string credentialsClientSecret, string resourceGroupName, string topicName)
         {
             try
@@ -350,8 +350,8 @@ namespace DotNetCoreApis.Controllers
                 EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 IPage<DomainTopic> topicsResult = await managementClient.DomainTopics.ListByDomainAsync(
-                    resourceGroupName: resourceGroupName, 
-                    domainName: domainName, 
+                    resourceGroupName: resourceGroupName,
+                    domainName: domainName,
                     filter: filter);
                 List<DomainTopic> topics = new List<DomainTopic>();
                 foreach (DomainTopic topic in topicsResult)
@@ -473,21 +473,21 @@ namespace DotNetCoreApis.Controllers
         /// <response code="500">Internal Error</response>
         [HttpPost("SubscribeEvent")]
         public async Task<EventSubscription> SubscribeEvent(
-            string credentialsAzureSubscriptionId, 
-            string credentialsTenantId, 
-            string credentialsClientId, 
+            string credentialsAzureSubscriptionId,
+            string credentialsTenantId,
+            string credentialsClientId,
             string credentialsClientSecret,
-            string scope, 
-            string eventSubscriptionName, 
-            string id, 
-            string name, 
-            string subscriptionType, 
-            string topic, 
-            string provisioningState, 
-            List<string> labels, 
-            string eventDeliverySchema, 
-            int maxDeliveryAttempts, 
-            int eventTimeToLiveInMinutes, 
+            string scope,
+            string eventSubscriptionName,
+            string id,
+            string name,
+            string subscriptionType,
+            string topic,
+            string provisioningState,
+            List<string> labels,
+            string eventDeliverySchema,
+            int maxDeliveryAttempts,
+            int eventTimeToLiveInMinutes,
             double expirationTimeInHours,
             string endpointUrl,
             int? maxEventsPerBatch)
@@ -503,7 +503,7 @@ namespace DotNetCoreApis.Controllers
                     eventTimeToLiveInMinutes: eventTimeToLiveInMinutes);
                 DeadLetterDestination deadLetterDestination = null;
                 WebHookEventSubscriptionDestination destination = new WebHookEventSubscriptionDestination(endpointUrl: endpointUrl,
-                    maxEventsPerBatch: maxEventsPerBatch);                
+                    maxEventsPerBatch: maxEventsPerBatch);
                 EventSubscription eventSubscriptionInfo = new EventSubscription(
                     id: id,
                     name: name,
@@ -518,8 +518,8 @@ namespace DotNetCoreApis.Controllers
                     retryPolicy: retryPolicy,
                     deadLetterDestination: deadLetterDestination);
                 EventSubscription createdSubscription = await managementClient.EventSubscriptions.CreateOrUpdateAsync(
-                    scope: scope, 
-                    eventSubscriptionName: eventSubscriptionName, 
+                    scope: scope,
+                    eventSubscriptionName: eventSubscriptionName,
                     eventSubscriptionInfo: eventSubscriptionInfo);
                 return createdSubscription;
             }

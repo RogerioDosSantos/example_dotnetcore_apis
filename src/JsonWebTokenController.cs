@@ -22,7 +22,7 @@ namespace DotNetCoreApis.Controllers
         {
             _logger = logger;
             _jsonWebTokenTools = jsonWebTokenTools;
-            if(_fullCertificate == null)
+            if (_fullCertificate == null)
             {
                 _fullCertificate = certificateTools.CreateSignedPrivateCertificate("ten_year_certificate", "ten_year_certificate_password", DateTime.UtcNow.AddYears(10));
                 _publicCertificate = certificateTools.GetPublicCertificate(_fullCertificate);

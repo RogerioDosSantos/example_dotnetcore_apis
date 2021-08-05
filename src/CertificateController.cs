@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using DotNetCoreApis.Tools;
@@ -15,7 +14,7 @@ namespace DotNetCoreApis.Controllers
     public class CertificateController : ControllerBase
     {
         private readonly ILogger _logger = null;
-        private ICertificateTools _certificateTools = null;
+        private readonly ICertificateTools _certificateTools = null;
         public CertificateController(ILogger<CertificateController> logger, ICertificateTools certificateTools)
         {
             _logger = logger;

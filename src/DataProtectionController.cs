@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DotNetCoreApis.Tools;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,7 @@ namespace DotNetCoreApis.Controllers
     public class DataProtectionController : ControllerBase
     {
         private readonly ILogger _logger = null;
-        private IDataProtectionProvider _dataProtectionProvider = null;
+        private readonly IDataProtectionProvider _dataProtectionProvider = null;
         public DataProtectionController(ILogger<DataProtectionController> logger, IDataProtectionProvider dataProtectionProvider)
         {
             _logger = logger;

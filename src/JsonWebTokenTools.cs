@@ -1,9 +1,9 @@
-﻿using Jose;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Jose;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DotNetCoreApis.Tools
 {
@@ -60,7 +60,7 @@ namespace DotNetCoreApis.Tools
         {
             try
             {
-                if (String.IsNullOrEmpty(token) || signingCertificate is null)
+                if (string.IsNullOrEmpty(token) || signingCertificate is null)
                 {
                     _logger?.LogError("Invalid parameters.");
                     return null;

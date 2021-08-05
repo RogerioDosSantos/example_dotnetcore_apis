@@ -1,20 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Microsoft.AspNetCore.DataProtection;
-using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Collections.Generic;
 
 namespace DotNetCoreApis.Tools.Qa
 {
     public class TestJsonWebTokenTools
     {
-        private JsonWebTokenTools _jsonWebTokenTools = null;
-        private CertificateTools _certificateTools = null;
-        private X509Certificate2 _fullCertificate = null;
-        private X509Certificate2 _publicCertificate = null;
-        Dictionary<string, object> _payload = null;
+        private readonly JsonWebTokenTools _jsonWebTokenTools = null;
+        private readonly CertificateTools _certificateTools = null;
+        private readonly X509Certificate2 _fullCertificate = null;
+        private readonly X509Certificate2 _publicCertificate = null;
+        readonly Dictionary<string, object> _payload = null;
 
         public TestJsonWebTokenTools()
         {
@@ -61,7 +60,7 @@ namespace DotNetCoreApis.Tools.Qa
 
         [Fact]
         public void AsymetricToken_ToWithFullCertificate_FromWithPublicCertificate()
-        {            
+        {
             string payloadJWT = _jsonWebTokenTools.ToAsymetricToken(_fullCertificate, _payload);
             Assert.NotEmpty(payloadJWT);
             Dictionary<string, object> restoredPayload = _jsonWebTokenTools.FromAsymetricToken(_publicCertificate, payloadJWT);

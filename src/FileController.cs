@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using DotNetCoreApis.Tools;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -36,7 +31,7 @@ namespace DotNetCoreApis.Controllers
             await Task.Delay(0);
             try
             {
-                var stream = new MemoryStream(Encoding.ASCII.GetBytes("Hello World"));
+                MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes("Hello World"));
                 return new FileStreamResult(stream, "text/plain")
                 {
                     FileDownloadName = "test.txt"
@@ -48,7 +43,7 @@ namespace DotNetCoreApis.Controllers
                 return null;
             }
         }
-        
+
         [HttpGet("diskFile")]
         public FileResult getFileById(string filePath)
         {

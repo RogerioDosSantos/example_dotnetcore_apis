@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.IO;
-using System.Net;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Logging;
 
 namespace DotNetCoreApis.Tools
 {
     public class DataProtectionTools
     {
         private readonly ILogger _logger = null;
-        IDataProtectionProvider _dataProtectionProvider = null;
+        readonly IDataProtectionProvider _dataProtectionProvider = null;
 
         public DataProtectionTools(ILogger logger, IDataProtectionProvider dataProtectionProvider)
         {

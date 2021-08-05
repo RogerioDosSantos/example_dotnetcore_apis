@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using DotNetCoreApis.Tools;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -42,6 +36,6 @@ namespace DotNetCoreApis.Controllers
                 _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
                 return "Not OK";
             }
-        }               
+        }
     }
 }

@@ -1,19 +1,18 @@
+using System;
+using System.IO;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using DotNetCoreApis.Tools;
-using Microsoft.AspNetCore.DataProtection;
-using System;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Security.Cryptography;
 
 namespace DotNetCoreApis.Tools.Qa
 {
     public class TestDataProtectionTools
     {
-        private DataProtectionTools _dataProtectionTools = null;
-        private CertificateTools _certificateTools = null;
+        private readonly DataProtectionTools _dataProtectionTools = null;
+        private readonly CertificateTools _certificateTools = null;
 
         public TestDataProtectionTools()
         {
@@ -31,7 +30,7 @@ namespace DotNetCoreApis.Tools.Qa
 
         [Fact]
         public void TestGetDataProtectionProvider_NoCertificateInformed()
-        {            
+        {
             DateTime tenYearsFromNow = DateTime.UtcNow.AddYears(10);
             X509Certificate2 certificate = _certificateTools.CreateSignedPrivateCertificate("ten_year_certificate", "ten_year_certificate_password", tenYearsFromNow);
             Assert.NotNull(certificate);
