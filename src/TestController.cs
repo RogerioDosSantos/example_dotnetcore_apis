@@ -14,48 +14,34 @@ namespace DotNetCoreApis.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ShellController : ControllerBase
+    public class TestController : ControllerBase
     {
         private readonly ILogger _logger = null;
-        private ICertificateTools _certificateTools = null;
-        public ShellController(ILogger<ShellController> logger)
+        public TestController(ILogger<TestController> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
         /// Execute a shell command
         /// </summary>
-        /// <param name="command">Command that needs to be executed</param>
-        /// <param name="parameters">Parameters for the command</param>
         /// <response code="200">Success</response>
         /// <response code="406">Invalid Parameter Value</response>
         /// <response code="400">Invalid Parameter Format</response>
         /// <response code="500">Internal Error</response>
-        [HttpPost("Command")]
-        public async Task<FileStreamResult> ExecuteCommand(string command = "", string parameters = "")
+        [HttpGet("Command")]
+        public async Task<string> ExecuteCommand()
         {
             await Task.Delay(0);
             try
             {
-                var stream = new MemoryStream(Encoding.ASCII.GetBytes("Hello World"));
-                return new FileStreamResult(stream, "text/plain")
-                {
-                    FileDownloadName = "test.txt"
-                };
+                return "OK";
             }
             catch (Exception ex)
             {
                 _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
-                //return this.StatusCode(StatusCodes.Status500InternalServerError);
-                return null;
+                return "Not OK";
             }
-        }
-        
-        [HttpPost("GetFile")]
-        public FileResult getFileById(string filePath)
-        {
-            return PhysicalFile($"{filePath}", "application/octet-stream", enableRangeProcessing: true);
-        }
+        }               
     }
 }

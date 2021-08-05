@@ -1,61 +1,58 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using DotNetCoreApis.Tools;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
-using System.Reflection;
-using System;
-using Microsoft.AspNetCore.DataProtection;
-using DotNetCoreApis.Tools;
+using Microsoft.OpenApi.Models;
 
 namespace DotNetCoreApis
 {
     public class Startup
     {
+        public IConfiguration _config { get; }
         private readonly ILoggerFactory _loggerFactory;
+
         public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            Configuration = configuration;
+            _config = configuration;
             _loggerFactory = loggerFactory;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            IMvcBuilder mvcBuilder = services.AddControllers()
+                .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                );
 
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            Assembly entryAssembly = Assembly.GetEntryAssembly();
+            string version = entryAssembly.GetName().Version.ToString() ?? "0.0.0";
+            services.AddSwaggerGen(swaggerConfig =>
             {
-                c.SwaggerDoc("v1", new Info 
-                    {  
-                      Version = "v1",
-                      Title = ".Net Core API - Several Examples", 
-                      // All Configuration below are optional
-                      Description = "Several Examples implemented using .Net core API",
-                      TermsOfService = "None",
-                      Contact = new Contact
-                      {
-                          Name = "Roger Santos",
-                          Email = string.Empty,
-                          Url = "https://github.com/RogerioDosSantos"
-                      },
-                      License = new License
-                      {
-                          Name = "MIT",
-                          Url = "https://opensource.org/licenses/MIT"
-                      }
-                    });
+                swaggerConfig.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Version = version,
+                    Title = ".Net Core API - Several Examples",
+                    Description = "Several Examples implemented using .Net core API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Roger Santos",
+                        Email = string.Empty,
+                        Url = new Uri("https://github.com/RogerioDosSantos")
+                    }
+                });
 
-                // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                swaggerConfig.IncludeXmlComments(xmlPath);
             });
 
             // Data Protection Setup
@@ -66,38 +63,38 @@ namespace DotNetCoreApis
             // Tools Dependency Injection
             services.AddSingleton<IJsonWebTokenTools>(new JsonWebTokenTools(_loggerFactory.CreateLogger(typeof(JsonWebTokenTools))));
             services.AddSingleton<ICertificateTools>(new CertificateTools(_loggerFactory.CreateLogger(typeof(CertificateTools))));
-            
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            // }
-            // else
-            // {
-            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //     app.UseHsts();
-            // }
-            //
-            // app.UseHttpsRedirection();
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                {
+                    string host = string.Empty;
+                    string appServiceHostName = string.Empty;
+                    if (httpReq.Headers.ContainsKey("x-original-host"))
+                    {
+                        host = httpReq.Headers["x-original-host"];
+                        appServiceHostName = httpReq.Headers["host"];
+                    }
+                });
+            });
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
             Assembly executingAssembly = Assembly.GetEntryAssembly();
             string version = executingAssembly.GetName().Version.ToString() ?? "0.0.0";
             app.UseSwaggerUI(swaggerConfig =>
             {
-                swaggerConfig.SwaggerEndpoint("/swagger/v1/swagger.json", version);
-                swaggerConfig.RoutePrefix = string.Empty;
+                swaggerConfig.SwaggerEndpoint("../swagger/v2/swagger.json", version);
+                swaggerConfig.RoutePrefix = "";
             });
 
-            app.UseMvc();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

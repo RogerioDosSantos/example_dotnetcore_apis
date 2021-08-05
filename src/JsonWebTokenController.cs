@@ -59,7 +59,7 @@ namespace DotNetCoreApis.Controllers
         }
 
         /// <summary>
-        /// Create a JWT
+        /// Read a JWT
         /// </summary>
         /// <param name="jwt">Payload List to create the token</param>
         /// <response code="200">Success</response>
