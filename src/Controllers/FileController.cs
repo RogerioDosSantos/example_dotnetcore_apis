@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using dotnetcore_apis.Tools;
 using DotNetCoreApis.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,24 @@ namespace DotNetCoreApis.Controllers
 
         private readonly ILogger _logger = null;
         private readonly IHostingEnvironment _hostingEnvironment = null;
+
+        private string UploadDir { 
+            get {
+                string webRootDir = _hostingEnvironment?.WebRootPath;
+                if (string.IsNullOrEmpty(webRootDir))
+                {
+                    _logger.LogWarning("Could not get web base directory. Using content root path");
+                    webRootDir = _hostingEnvironment?.ContentRootPath;
+                    if (string.IsNullOrEmpty(webRootDir))
+                    {
+                        _logger.LogWarning("Could not get web base directory. Using executable path");
+                        webRootDir = AppDomain.CurrentDomain.BaseDirectory;
+                    }
+                }
+                return Path.Combine(webRootDir, "uploads");
+            }  
+        }
+
         public FileController(ILogger<FileController> logger, IHostingEnvironment hostingEnvironment)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -68,118 +87,43 @@ namespace DotNetCoreApis.Controllers
         /// <summary>
         /// Upload small files and save it into the disk (Up to 30MB)
         /// </summary>
-        /// <param name="postedFiles"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
         /// <response code="500">Internal Error</response>
         /// <response code="413">File too Large</response>
+        /// <response code="400">Did not receive any file</response>
+      
         [HttpPost("uploadSmallFiles")]
-        public ActionResult<List<FileUploadResponseModel>> UploadSmallFiles(List<IFormFile> postedFiles)
+        public ActionResult<List<FileUploadResponseModel>> UploadSmallFiles([FromForm] IFormFileCollection files)
         {
-            try
-            {
-                string webRootDir = _hostingEnvironment?.WebRootPath;
-                if (string.IsNullOrEmpty(webRootDir))
-                {
-                    _logger.LogWarning("Could not get web base directory. Using content root path");
-                    webRootDir = _hostingEnvironment?.ContentRootPath;
-                    if (string.IsNullOrEmpty(webRootDir))
-                    {
-                        _logger.LogWarning("Could not get web base directory. Using executable path");
-                        webRootDir = AppDomain.CurrentDomain.BaseDirectory;
-                    }
-                }
+            List<FileUploadResponseModel> savedProperties = null;
+            if (FileTools.SaveFilesToDisk(UploadDir, files, out savedProperties))
+                return Ok(savedProperties);
 
-                string uploadDir = Path.Combine(webRootDir, "uploads");
-                if (!Directory.Exists(uploadDir))
-                    Directory.CreateDirectory(uploadDir);
-
-                List<FileUploadResponseModel> resp = new List<FileUploadResponseModel>();
-                foreach (IFormFile postedFile in postedFiles)
-                {
-                    string fileName = Path.GetFileName(postedFile.FileName);
-                    string filePath = Path.Combine(uploadDir, fileName);
-                    bool fileExist = System.IO.File.Exists(filePath);
-                    float fileSize = ((float) postedFile.Length)/(1024 * 1024);
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        postedFile.CopyTo(fileStream);
-                        _logger.LogInformation($"{fileName} - Uploaded with success");
-                        resp.Add(new FileUploadResponseModel
-                        {
-                            file = fileName,
-                            uploadPath = filePath,
-                            fileReplaced = fileExist,
-                            fileSize = fileSize
-                        });
-                    }
-                }
-                return Ok(resp);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
-                return Ok(null);
-            }
+            return Ok(savedProperties);
         }
 
         /// <summary>
         /// Upload large files and save it into the disk (More than 30MB)
         /// </summary>
-        /// <param name="postedFiles"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
         /// <response code="500">Internal Error</response>
         /// <response code="413">File too Large</response>
+        /// <response code="400">Did not receive any file</response>
         [HttpPost("uploadLargeFiles")]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         [DisableRequestSizeLimit]
         [Consumes("multipart/form-data")]
-        public ActionResult<List<FileUploadResponseModel>> UploadLargeFiles(List<IFormFile> postedFiles)
+        public ActionResult<List<FileUploadResponseModel>> UploadLargeFiles([FromForm] IFormFileCollection files)
         {
-            try
-            {
-                string webRootDir = _hostingEnvironment?.WebRootPath;
-                if (string.IsNullOrEmpty(webRootDir))
-                {
-                    _logger.LogWarning("Could not get web base directory. Using content root path");
-                    webRootDir = _hostingEnvironment?.ContentRootPath;
-                    if (string.IsNullOrEmpty(webRootDir))
-                    {
-                        _logger.LogWarning("Could not get web base directory. Using executable path");
-                        webRootDir = AppDomain.CurrentDomain.BaseDirectory;
-                    }
-                }
+            List<FileUploadResponseModel> savedProperties = null;
+            if (FileTools.SaveFilesToDisk(UploadDir, files, out savedProperties))
+                return Ok(savedProperties);
 
-                string uploadDir = Path.Combine(webRootDir, "uploads");
-                if (!Directory.Exists(uploadDir))
-                    Directory.CreateDirectory(uploadDir);
-
-                List<FileUploadResponseModel> resp = new List<FileUploadResponseModel>();
-                foreach (IFormFile postedFile in postedFiles)
-                {
-                    string fileName = Path.GetFileName(postedFile.FileName);
-                    string filePath = Path.Combine(uploadDir, fileName);
-                    bool fileExist = System.IO.File.Exists(filePath);
-                    float fileSize = ((float)postedFile.Length) / (1024 * 1024);
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        postedFile.CopyTo(fileStream);
-                        _logger.LogInformation($"{fileName} - Uploaded with success");
-                        resp.Add(new FileUploadResponseModel
-                        {
-                            file = fileName,
-                            uploadPath = filePath,
-                            fileReplaced = fileExist,
-                            fileSize = fileSize
-                        });
-                    }
-                }
-                return Ok(resp);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError($"Unknown Exception. Type: {ex.GetType().ToString()} ; Message: {ex.Message} ; Details: {ex.ToString()}");
-                return Ok(null);
-            }
+            return Ok(savedProperties);
         }
+
+
     }
 }

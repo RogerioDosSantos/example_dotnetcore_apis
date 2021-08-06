@@ -23,8 +23,8 @@ namespace DotNetCoreApis.Controllers
         /// <response code="406">Invalid Parameter Value</response>
         /// <response code="400">Invalid Parameter Format</response>
         /// <response code="500">Internal Error</response>
-        [HttpGet("Command")]
-        public async Task<string> ExecuteCommand()
+        [HttpGet("Test")]
+        public async Task<string> Test()
         {
             await Task.Delay(0);
             try

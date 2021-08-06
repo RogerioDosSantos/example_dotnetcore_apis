@@ -89,7 +89,6 @@ namespace DotNetCoreApis
                 swaggerConfig.RoutePrefix = "";
             });
 
-            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
