@@ -25,7 +25,7 @@ namespace DotNetCoreApis.Controllers
     public class CSharpScriptController : ControllerBase
     {
         private readonly ILogger _logger = null;
-        public CSharpScriptController(ILogger<FileController> logger, IHostingEnvironment hostingEnvironment)
+        public CSharpScriptController(ILogger<FileController> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
