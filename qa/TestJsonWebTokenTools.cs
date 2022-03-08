@@ -13,7 +13,7 @@ namespace DotNetCoreApis.Tools.Qa
         private readonly CertificateTools _certificateTools = null;
         private readonly X509Certificate2 _fullCertificate = null;
         private readonly X509Certificate2 _publicCertificate = null;
-        readonly Dictionary<string, object> _payload = null;
+        private readonly Dictionary<string, object> _payload = null;
 
         public TestJsonWebTokenTools()
         {

@@ -44,7 +44,7 @@ namespace DotNetCoreApis.Controllers
             AuthenticationToken = result.AccessToken;
         }
 
-        public override async Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        public async override Task ProcessHttpRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ArgumentNullException("request");

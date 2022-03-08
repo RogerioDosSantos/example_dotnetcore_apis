@@ -22,7 +22,7 @@ namespace DotNetCoreApis.Controllers
         private readonly ILogger _logger = null;
         private readonly IHostingEnvironment _hostingEnvironment = null;
 
-        private string UploadDir { 
+        private string UploadDir {
             get {
                 string webRootDir = _hostingEnvironment?.WebRootPath;
                 if (string.IsNullOrEmpty(webRootDir))
@@ -36,7 +36,7 @@ namespace DotNetCoreApis.Controllers
                     }
                 }
                 return Path.Combine(webRootDir, "uploads");
-            }  
+            }
         }
 
         public FileController(ILogger<FileController> logger, IHostingEnvironment hostingEnvironment)
@@ -70,7 +70,7 @@ namespace DotNetCoreApis.Controllers
                 return null;
             }
         }
-        
+
         /// <summary>
         /// Get a file from the disk
         /// </summary>
@@ -92,7 +92,7 @@ namespace DotNetCoreApis.Controllers
         /// <response code="500">Internal Error</response>
         /// <response code="413">File too Large</response>
         /// <response code="400">Did not receive any file</response>
-      
+
         [HttpPost("uploadSmallFiles")]
         public ActionResult<List<FileUploadResponseModel>> UploadSmallFiles([FromForm] IFormFileCollection files)
         {

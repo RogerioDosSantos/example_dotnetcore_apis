@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using DotNetCoreApis.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -10,7 +8,7 @@ namespace dotnetcore_apis.Tools
 {
     public class FileTools
     {
-        static public bool SaveFilesToDisk(string savingDirectory, IFormFileCollection files, out List<FileUploadResponseModel> savedProperties)
+        public static bool SaveFilesToDisk(string savingDirectory, IFormFileCollection files, out List<FileUploadResponseModel> savedProperties)
         {
             savedProperties = new List<FileUploadResponseModel>();
             try

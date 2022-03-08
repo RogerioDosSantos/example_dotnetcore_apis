@@ -16,8 +16,8 @@ namespace DotNetCoreApis.Controllers
     {
         private readonly ILogger _logger = null;
         private readonly IJsonWebTokenTools _jsonWebTokenTools = null;
-        static private X509Certificate2 _fullCertificate = null;
-        static private X509Certificate2 _publicCertificate = null;
+        private static X509Certificate2 _fullCertificate = null;
+        private static X509Certificate2 _publicCertificate = null;
         public JsonWebTokenController(ILogger<JsonWebTokenController> logger, IJsonWebTokenTools jsonWebTokenTools, ICertificateTools certificateTools)
         {
             _logger = logger;

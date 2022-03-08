@@ -9,7 +9,7 @@ namespace DotNetCoreApis.Tools
     public class DataProtectionTools
     {
         private readonly ILogger _logger = null;
-        readonly IDataProtectionProvider _dataProtectionProvider = null;
+        private readonly IDataProtectionProvider _dataProtectionProvider = null;
 
         public DataProtectionTools(ILogger logger, IDataProtectionProvider dataProtectionProvider)
         {
