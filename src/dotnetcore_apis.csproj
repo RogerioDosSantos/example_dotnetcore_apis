@@ -14,6 +14,8 @@
 		<PackageReference Include="Microsoft.Azure.Management.EventGrid" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
+		<PackageReference Include="Microsoft.OneDriveSDK" Version="2.0.7" />
+		<PackageReference Include="Microsoft.OneDriveSDK.Authentication" Version="1.0.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
 	</ItemGroup>

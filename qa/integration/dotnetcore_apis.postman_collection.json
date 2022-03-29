@@ -1,0 +1,872 @@
+{
+	"info": {
+		"_postman_id": "688ef3ad-e72a-4eed-9325-322e3ce6820b",
+		"name": "dotnetcore_apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/test/command",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"test",
+								"command"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Files",
+			"item": [
+				{
+					"name": "Upload Small File (HTTP)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": "/D:/test_file_path.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/file/uploadsmallfiles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"file",
+								"uploadsmallfiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Large File (HTTP)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": "/D:/test_file_path.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{serviceURL}}/api/file/uploadlargefiles",
+							"host": [
+								"{{serviceURL}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"uploadlargefiles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OneDrive",
+			"item": [
+				{
+					"name": "Get Drives - Store First Drive ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  //requestBody = JSON.parse(pm.request.body.raw);\r",
+									"  console.log(data.value[0].id);\r",
+									"  pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drives",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drives"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Drive given ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.value[0].id);\r",
+									"  //pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drives/{{_driveId}}",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drives",
+								"{{_driveId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Driver Content - Given Drive ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.value[0].id);\r",
+									"  //pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drives/{{_driveId}}/root/children",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drives",
+								"{{_driveId}}",
+								"root",
+								"children"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get list of videos from raw folder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.value[0].id);\r",
+									"  //pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drive/root:/videos/raw:/children",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drive",
+								"root:",
+								"videos",
+								"raw:",
+								"children"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get edited folder id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.id);\r",
+									"  pm.environment.set(\"_editedFolderId\", data.id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drive/root:/videos/edited",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drive",
+								"root:",
+								"videos",
+								"edited"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload small files - Up to 4MB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.value[0].id);\r",
+									"  //pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": ""
+							}
+						},
+						"url": {
+							"raw": "{{onedrive_root_url}}/drives/{{_driveId}}/items/{{_editedFolderId}}:/{{onedrive_upload_small_file_name}}:/content",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drives",
+								"{{_driveId}}",
+								"items",
+								"{{_editedFolderId}}:",
+								"{{onedrive_upload_small_file_name}}:",
+								"content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create upload session - Get the Large File Upload URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  console.log(data.uploadUrl);\r",
+									"  pm.environment.set(\"_largeFileUploadURL\", data.uploadUrl);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{onedrive_root_url}}/drives/{{_driveId}}/items/{{_editedFolderId}}:/{{onedrive_upload_large_file_name}}:/createUploadSession",
+							"host": [
+								"{{onedrive_root_url}}"
+							],
+							"path": [
+								"drives",
+								"{{_driveId}}",
+								"items",
+								"{{_editedFolderId}}:",
+								"{{onedrive_upload_large_file_name}}:",
+								"createUploadSession"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload small files - Up to 4MB Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get Data\",function(){\r",
+									"  let data = pm.response.json();\r",
+									"  //console.log(data.value[0].id);\r",
+									"  //pm.environment.set(\"_driveId\", data.value[0].id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "EwBoA8l6BAAUwihrrCrmQ4wuIJX5mbj7rQla6TUAATZGYsU5pguDYqBwpW+ZJFmJ+8mCiVhUCIJtRd5XA33+vrgjQ6nddybjWEg6lltxbG88bg2RyhEerRQa5PA+58EIZH0cIBSb/vcyr+tR6nFA7Apkp9UUP5w0/3L/xeE9EgGyIfuaRkKk4YnBAGbrtNiU2vion+1amvU8YNbdSVDt/HgEWigOJdvJAvBdTTqpnV8xYJOOMXrAqXRIMUWGT8HrR7jKGoPJ2bzpPLxV12JNrMTS4N9z3p/C3ew8AFSFxq3++7WsUFxX84Q0EZ7Na9Ppe66VWzumM15ufR95GPr7YafrosuOcbjMLQZc+tyzxe0iwC2vYrN4UbniXe2XnTkDZgAACAPlUJYpenTbOAJakSh2ECBASiceD6Hl3fCLIBSZSH/mK7gkaeFx17rTcD9ISHFuPxZ5jpOEM2nmMJHxlxytPRo5ICxIwZg5gq5AvKP8wYi6Vq5orKYdoTkhNhbPaGVsvz1/6nqQKy9QnJjph5DUdi0ni+mYkfOU0d1TPtJ8uk4fFv8PcPNu8q/GqVZKaiBfY6ArO36p+w929WbDOq/XxUtM7EOpsEkWxKp3Pjf1H4aPHcC7TmGDigRsiQ87Nse/6sA4evhSWR33MQ2btz1FUdI1QeZ9Kod+mPHNleBzboy3JBdXNpY7vgGZayrwsBtJm9RRpMZB6cO/sD3Yn0FDY+5k/9eSDxlsv+d2i4oePlPLS5Wu/3ELbFdR0Ry28WWwsRLNQxbxrsk1rAQZ2aZatY1a/qFocLff/xIeKWxGU6yHD5GM0bt93vY3ZPUmzMpE3r5gtXrwHYMhvyr0Pypfxb1UmLtirZFWvVxr+9fJN3lz8zyYO2NSvFQnsmLTAVCeq//cNfS6gxeHfLPu2Fvwl/U2mBP8kGhDkGl6V07SOasOQ9+Nn1hExiRSlDXXYfBDsgakJC2ErE5qlB9VIvekXKTp9Ii7wZhCZ5+gGu/MPORhd5fD/xQUiO5kmMYPV34nRnIqAZ2cclpa38VHPxeRV8tH185uSX/3GV9ZkrpfUXiYaUwN0BkmvitJOTWWCX1YGNUvD10r0sI7WrqpfitWA9wW6UA5C6TULikWP17900jsAFcRSv6IIzLjLtdZW7ZYvONXgwI=",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "{{onedrive_authorization_scopes}}",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "{{onedrive_authorization_client_id}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "user_onedrive_access",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code_with_pkce",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": ""
+							}
+						},
+						"url": {
+							"raw": "{{_largeFileUploadURL}}",
+							"host": [
+								"{{_largeFileUploadURL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "serviceURL",
+			"value": "http://localhost:8000"
+		}
+	]
+}

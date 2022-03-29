@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using DotNetCoreApis.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -64,5 +65,12 @@ namespace dotnetcore_apis.Tools
             }
         }
 
+        public static string GetAssemblyDirectory()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uriBuilder = new UriBuilder(codeBase);
+            string assemblyPath = Uri.UnescapeDataString(uriBuilder.Path);
+            return Path.GetDirectoryName(assemblyPath);
+        }
     }
 }
