@@ -1,0 +1,55 @@
+trigger:
+- master
+
+name: '.Net Core Examples'
+
+jobs:
+
+- job: Build_and_Publish
+  pool:
+    vmImage: 'ubuntu-18.04'
+  variables:
+    buildConfiguration: 'Release'
+  steps:
+  - task: DockerCompose@0
+    displayName: 'Build' 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: '<add_here_your_subscription>'
+      azureContainerRegistry: '<add_here_you_container_registry>'
+      dockerComposeFile: 'build/docker-compose.yaml'
+      projectName: 'dotnetcore_apis'
+      action: 'Build services'
+      additionalImageTags: '$(Build.BuildId)'
+  - task: DockerCompose@0
+    displayName: 'Publish' 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: '<add_here_your_subscription>'
+      azureContainerRegistry: '<add_here_you_container_registry>'
+      dockerComposeFile: 'build/docker-compose.yaml'
+      projectName: 'dotnetcore_apis'
+      action: 'Push services'
+      additionalImageTags: '$(Build.BuildId)'
+
+- job: Deploy
+  pool:
+    vmImage: 'ubuntu-18.04'
+  dependsOn: Build_and_Publish
+  variables:
+    buildConfiguration: 'Release'
+  steps:
+  - task: AzureCLI@2
+    displayName: 'Deploy' 
+    inputs:
+      azureSubscription: '<add_here_your_subscription>'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        build_id=$1
+        echo "Build ID: ${build_id}"
+        az config set extension.use_dynamic_install=yes_without_prompt
+        az containerapp revision list --name "<enter_here_your_container_app_name>" --resource-group "<enter_here_the_resource_group_where_the_container_app_is>" -o table
+        az containerapp update --name "<enter_here_your_container_app_name>" --resource-group "<enter_here_the_resource_group_where_the_container_app_is>" --image "<add_here_you_container_registry>/rogersantos/dotnetcore_apis:linux"
+      arguments: '$(Build.BuildId)'
+
