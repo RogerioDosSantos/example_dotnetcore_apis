@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "donetcore_cli": {
+      "commandName": "Project",
+      "commandLineArgs": "test -sc roger"
+    }
+  }
+}
