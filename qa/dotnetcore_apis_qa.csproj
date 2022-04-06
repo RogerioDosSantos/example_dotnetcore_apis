@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\src\dotnetcore_apis.csproj" />
+	  <ProjectReference Include="..\src\api\dotnetcore_apis.csproj" />
 	</ItemGroup>
 
 </Project>

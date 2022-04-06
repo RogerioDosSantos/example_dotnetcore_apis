@@ -6,8 +6,10 @@ WORKDIR /workspace
 
 ### Compile Project
 COPY ./src /workspace/src
+COPY ./qa /workspace/qa
+COPY ./dotnetcore_apis.sln /workspace/dotnetcore_apis.sln
 RUN echo "*** Compile Project" \
-  && cd /workspace/src \
+  && cd /workspace \
   && dotnet restore \
   && dotnet publish -c Release -o /workspace/stage/release \
   && echo "*** Compile Project - DONE" 
