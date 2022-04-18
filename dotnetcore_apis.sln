@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29403.142
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetcore_qa", "qa\dotnetcore_qa.csproj", "{195FD0B2-7D71-47BC-9B5B-F03A0DD033D5}"
 EndProject
@@ -13,6 +13,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetcore_apis", "src\api\dotnetcore_apis.csproj", "{04094178-1C57-4C34-92EE-AF649D4D5BF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "donetcore_cli", "src\cli\donetcore_cli.csproj", "{62D73C4C-5F6B-441E-A3A8-AEDE9E6A15D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D59FF9C8-1E74-4BD7-BD0F-594D113024A8}"
+	ProjectSection(SolutionItems) = preProject
+		build\azure-pipelines.yml = build\azure-pipelines.yml
+		build\build_linux.docker = build\build_linux.docker
+		build\docker-compose.yaml = build\docker-compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +42,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D59FF9C8-1E74-4BD7-BD0F-594D113024A8} = {D0C47776-64C7-4795-949B-B6D12CDB3650}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0952EEF-24C9-49EC-B323-49EA8493BA10}

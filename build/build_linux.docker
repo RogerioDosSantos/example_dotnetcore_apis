@@ -1,7 +1,7 @@
 # Build Linux
 
 ## Build
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /workspace
 
 ### Compile Project
@@ -15,7 +15,7 @@ RUN echo "*** Compile Project" \
   && echo "*** Compile Project - DONE" 
 
 ## Release
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic AS dotnetcore_apis_release
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS dotnetcore_apis_release
 WORKDIR /workspace
 
 ### Install Release 
