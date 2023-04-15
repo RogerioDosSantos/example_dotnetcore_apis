@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
@@ -34,16 +34,15 @@ namespace DotNetCoreApis.Tools
         /// <returns></returns>
         public X509Certificate2 CreateSignedPrivateCertificate(string certificateName, string certificatePassword, DateTime expiractionDate)
         {
-            SubjectAlternativeNameBuilder nameBuilder = new SubjectAlternativeNameBuilder();
+            SubjectAlternativeNameBuilder nameBuilder = new();
             nameBuilder.AddIpAddress(IPAddress.Loopback);
             nameBuilder.AddIpAddress(IPAddress.IPv6Loopback);
             nameBuilder.AddDnsName("localhost");
             nameBuilder.AddDnsName(Environment.MachineName);
-            X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={certificateName}");
+            X500DistinguishedName distinguishedName = new($"CN={certificateName}");
             using (RSA rsa = RSA.Create(2048))
             {
-                CertificateRequest certificateRequest = new CertificateRequest(distinguishedName, rsa,
-                    HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                CertificateRequest certificateRequest = new(distinguishedName, rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                 certificateRequest.CertificateExtensions.Add(
                     new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment
                     | X509KeyUsageFlags.KeyEncipherment
@@ -72,7 +71,7 @@ namespace DotNetCoreApis.Tools
         /// <returns>A PEM encoded string</returns>
         public string ExportToPEM(X509Certificate certificate)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.AppendLine("-----BEGIN CERTIFICATE-----");
             builder.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
             builder.AppendLine("-----END CERTIFICATE-----");
@@ -88,7 +87,7 @@ namespace DotNetCoreApis.Tools
         {
             if (fullCertificate is null)
                 return null;
-            X509Certificate2 publicCertificate = new X509Certificate2(fullCertificate.Export(X509ContentType.Cert));
+            X509Certificate2 publicCertificate = new(fullCertificate.Export(X509ContentType.Cert));
             return publicCertificate;
         }
 
@@ -107,7 +106,7 @@ namespace DotNetCoreApis.Tools
                     _logger?.LogError("Invalid parameters.");
                     return null;
                 }
-                X509Certificate2 certificate = new X509Certificate2(certificatePath, certificatePassword);
+                X509Certificate2 certificate = new(certificatePath, certificatePassword);
                 return certificate;
             }
             catch (Exception ex)

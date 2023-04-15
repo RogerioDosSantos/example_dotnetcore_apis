@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -41,7 +41,7 @@ namespace dotnetcore_apis.Tools
                     string filePath = Path.Combine(savingDirectory, fileName);
                     bool fileExist = System.IO.File.Exists(filePath);
                     float fileSize = ((float)postedFile.Length) / (1024 * 1024);
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                    using (FileStream fileStream = new(filePath, FileMode.Create))
                     {
                         postedFile.CopyTo(fileStream);
                         savedProperties.Add(new FileUploadResponseModel
@@ -68,7 +68,7 @@ namespace dotnetcore_apis.Tools
         public static string GetAssemblyDirectory()
         {
             string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uriBuilder = new UriBuilder(codeBase);
+            UriBuilder uriBuilder = new(codeBase);
             string assemblyPath = Uri.UnescapeDataString(uriBuilder.Path);
             return Path.GetDirectoryName(assemblyPath);
         }

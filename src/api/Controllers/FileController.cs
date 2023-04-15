@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -58,7 +58,7 @@ namespace DotNetCoreApis.Controllers
             await Task.Delay(0);
             try
             {
-                MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes("Hello World"));
+                MemoryStream stream = new(Encoding.ASCII.GetBytes("Hello World"));
                 return new FileStreamResult(stream, "text/plain")
                 {
                     FileDownloadName = "test.txt"
