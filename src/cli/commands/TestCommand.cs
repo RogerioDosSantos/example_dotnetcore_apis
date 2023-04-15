@@ -1,18 +1,18 @@
 ﻿
+using System.Reflection;
+using System.Threading.Tasks;
 using donetcore_cli.interfaces;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace donetcore_cli.commands
 {
     [Command(
-        Name = "test", 
-        Description = "Test command with options", 
+        Name = "test",
+        Description = "Test command with options",
         OptionsComparison = System.StringComparison.InvariantCultureIgnoreCase
         )]
-     
+
     [HelpOption("--help")]
     class TestCommand
     {
@@ -32,7 +32,7 @@ namespace donetcore_cli.commands
 
         private async Task<int> OnExecute(CommandLineApplication app)
         {
-            if(ChannelName == null)
+            if (ChannelName == null)
             {
                 app.ShowHelp();
                 _logger.LogInformation("search_channel is required");

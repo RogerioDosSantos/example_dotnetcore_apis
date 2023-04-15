@@ -1,9 +1,9 @@
 ﻿
+using System.Reflection;
+using System.Threading.Tasks;
 using donetcore_cli.interfaces;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace donetcore_cli.commands
 {
@@ -17,7 +17,7 @@ namespace donetcore_cli.commands
     {
         private readonly ILogger<MainCommand> _logger = null;
         private IConsole _console = null;
-        
+
 
         public MainCommand(ILoggerFactory loggerFactory, IConsole console)
         {
