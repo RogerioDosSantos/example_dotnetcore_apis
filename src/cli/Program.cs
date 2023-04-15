@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
-using donetcore_cli.interfaces;
 using donetcore_cli.commands;
+using donetcore_cli.interfaces;
+using donetcore_cli.services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using donetcore_cli.services;
-using System.Net.Http;
 
 namespace donetcore_cli
 {
@@ -16,7 +16,7 @@ namespace donetcore_cli
     {
         private static async Task<int> Main(string[] args)
         {
-            
+
             // Configuration
             IConfigurationRoot Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -43,7 +43,7 @@ namespace donetcore_cli
                             );
                     });
                 });
-            
+
             // Run Application
             try
             {

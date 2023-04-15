@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace donetcore_cli.services
 {
-    public class TestService: ITestService
+    public class TestService : ITestService
     {
         private readonly ILogger _logger = null;
         private readonly IHttpClientFactory _clientFactory = null;
