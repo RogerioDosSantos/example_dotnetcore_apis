@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -36,8 +36,8 @@ namespace DotNetCoreApis.Controllers
 
         public override void InitializeServiceClient<T>(ServiceClient<T> client)
         {
-            AuthenticationContext authenticationContext = new AuthenticationContext($"https://login.windows.net/{_tenantId}");
-            ClientCredential credential = new ClientCredential(clientId: _clientId, clientSecret: _clientSecret);
+            AuthenticationContext authenticationContext = new($"https://login.windows.net/{_tenantId}");
+            ClientCredential credential = new(clientId: _clientId, clientSecret: _clientSecret);
             AuthenticationResult result = authenticationContext.AcquireTokenAsync(resource: "https://management.core.windows.net/", clientCredential: credential).GetAwaiter().GetResult();
             if (result == null)
                 throw new InvalidOperationException("Failed to obtain the JWT token");
@@ -105,9 +105,9 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
-                Topic topic = new Topic(location: topicLocation);
+                Topic topic = new(location: topicLocation);
                 Topic createdTopic = await managementClient.Topics.CreateOrUpdateAsync(resourceGroupName: resourceGroupName, topicName: topicName, topicInfo: topic);
                 return createdTopic;
             }
@@ -140,9 +140,9 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
-                Domain domainInfo = new Domain(domainLocation);
+                Domain domainInfo = new(domainLocation);
                 Domain createdDomain = await managementClient.Domains.CreateOrUpdateAsync(resourceGroupName: resourceGroupName, domainName: domainName,
                     domainInfo: domainInfo);
                 return createdDomain;
@@ -174,8 +174,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(
-                    credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 await managementClient.Domains.DeleteAsync(resourceGroupName: resourceGroupName, domainName: domainName);
                 return true;
@@ -207,7 +206,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 IPage<Domain> domainsResult = await managementClient.Domains.ListByResourceGroupAsync(resourceGroupName: resourceGroupName, filter: filter);
                 List<Domain> domains = new List<Domain>();
@@ -244,7 +243,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 DomainSharedAccessKeys domainKeys = await managementClient.Domains.ListSharedAccessKeysAsync(resourceGroupName: resourceGroupName, domainName: domainName);
                 return domainKeys;
@@ -277,7 +276,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 DomainSharedAccessKeys domainKeys = await managementClient.Domains.RegenerateKeyAsync(
                     resourceGroupName: resourceGroupName,
@@ -313,7 +312,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 DomainTopic createdTopic = await managementClient.DomainTopics.CreateOrUpdateAsync(resourceGroupName: resourceGroupName,
                     domainName: domainName, domainTopicName: topicName);
@@ -347,7 +346,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 IPage<DomainTopic> topicsResult = await managementClient.DomainTopics.ListByDomainAsync(
                     resourceGroupName: resourceGroupName,
@@ -388,7 +387,7 @@ namespace DotNetCoreApis.Controllers
             try
             {
                 //Management SDKs (Microsoft.Azure.Management.EventGrid)
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 await managementClient.DomainTopics.DeleteAsync(resourceGroupName: resourceGroupName, domainName: domainName, domainTopicName: topicName);
                 return true;
@@ -425,7 +424,7 @@ namespace DotNetCoreApis.Controllers
             {
                 // Data plane SDKs (Microsoft.Azure.EventGrid)
                 ServiceClientCredentials credentials = new TopicCredentials(topicKey);
-                EventGridClient eventGridClientKey = new EventGridClient(credentials);
+                EventGridClient eventGridClientKey = new(credentials);
                 // Create a new event and add it to a list
                 List<EventGridEvent> events = new List<EventGridEvent>();
                 events.Add(new EventGridEvent(id, subject, data, eventType, DateTime.UtcNow, dataVersion, topic, metadataVersion));
@@ -495,28 +494,14 @@ namespace DotNetCoreApis.Controllers
             await Task.Delay(0);
             try
             {
-                EventGridManagementClient managementClient = new EventGridManagementClient(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
+                EventGridManagementClient managementClient = new(credentials: new CustomLoginCredentials(credentialsTenantId, credentialsClientId, credentialsClientSecret));
                 managementClient.SubscriptionId = credentialsAzureSubscriptionId;
                 EventSubscriptionFilter filter = null;
                 DateTime? expirationTime = DateTime.UtcNow.AddHours(expirationTimeInHours);
-                RetryPolicy retryPolicy = new RetryPolicy(maxDeliveryAttempts: maxDeliveryAttempts,
-                    eventTimeToLiveInMinutes: eventTimeToLiveInMinutes);
+                RetryPolicy retryPolicy = new(maxDeliveryAttempts: maxDeliveryAttempts, eventTimeToLiveInMinutes: eventTimeToLiveInMinutes);
                 DeadLetterDestination deadLetterDestination = null;
-                WebHookEventSubscriptionDestination destination = new WebHookEventSubscriptionDestination(endpointUrl: endpointUrl,
-                    maxEventsPerBatch: maxEventsPerBatch);
-                EventSubscription eventSubscriptionInfo = new EventSubscription(
-                    id: id,
-                    name: name,
-                    type: subscriptionType,
-                    topic: topic,
-                    provisioningState: provisioningState,
-                    destination: destination,
-                    filter: filter,
-                    labels: labels,
-                    expirationTimeUtc: expirationTime,
-                    eventDeliverySchema: eventDeliverySchema,
-                    retryPolicy: retryPolicy,
-                    deadLetterDestination: deadLetterDestination);
+                WebHookEventSubscriptionDestination destination = new(endpointUrl: endpointUrl, maxEventsPerBatch: maxEventsPerBatch);
+                EventSubscription eventSubscriptionInfo = new(id: id, name: name, type: subscriptionType, topic: topic, provisioningState: provisioningState, destination: destination, filter: filter, labels: labels, expirationTimeUtc: expirationTime, eventDeliverySchema: eventDeliverySchema, retryPolicy: retryPolicy, deadLetterDestination: deadLetterDestination);
                 EventSubscription createdSubscription = await managementClient.EventSubscriptions.CreateOrUpdateAsync(
                     scope: scope,
                     eventSubscriptionName: eventSubscriptionName,

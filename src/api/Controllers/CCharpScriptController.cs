@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,12 +43,7 @@ namespace DotNetCoreApis.Controllers
             await Task.Delay(0);
             try
             {
-                MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes("" +
-                    "using System;" + Environment.NewLine +
-                    "const string s = $\"Hello Dynamic C# Code\";" + Environment.NewLine +
-                    "string hello = $\"{ s } from { args[0]}!\";" + Environment.NewLine +
-                    "Console.WriteLine(hello);" + Environment.NewLine +
-                    ""));
+                MemoryStream stream = new(Encoding.ASCII.GetBytes("" + "using System;" + Environment.NewLine + "const string s = $\"Hello Dynamic C# Code\";" + Environment.NewLine + "string hello = $\"{ s } from { args[0]}!\";" + Environment.NewLine + "Console.WriteLine(hello);" + Environment.NewLine + ""));
                 return new FileStreamResult(stream, "text/plain")
                 {
                     FileDownloadName = "dynamic_code.cs"
@@ -89,7 +84,7 @@ namespace DotNetCoreApis.Controllers
         {
             _logger.LogInformation($"Starting compilation of: '{filepath}'");
             string sourceCode = System.IO.File.ReadAllText(filepath);
-            using (MemoryStream peStream = new MemoryStream())
+            using (MemoryStream peStream = new())
             {
                 Microsoft.CodeAnalysis.Emit.EmitResult result = GenerateCode(sourceCode).Emit(peStream);
                 if (!result.Success)
@@ -149,9 +144,9 @@ namespace DotNetCoreApis.Controllers
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static WeakReference LoadAndExecute(byte[] compiledAssembly, string[] args)
         {
-            using (MemoryStream asm = new MemoryStream(compiledAssembly))
+            using (MemoryStream asm = new(compiledAssembly))
             {
-                SimpleUnloadableAssemblyLoadContext assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
+                SimpleUnloadableAssemblyLoadContext assemblyLoadContext = new();
 
                 System.Reflection.Assembly assembly = assemblyLoadContext.LoadFromStream(asm);
 
