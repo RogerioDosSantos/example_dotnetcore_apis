@@ -1,6 +1,21 @@
 version = 1
 
 [[analyzers]]
+name = "test-coverage"
+
+[[analyzers]]
+name = "shell"
+
+[[analyzers]]
+name = "secrets"
+
+[[analyzers]]
+name = "docker"
+
+  [analyzers.meta]
+  dockerfile_paths = ["/build/build_linux.docker"]
+
+[[analyzers]]
 name = "csharp"
 
 [[transformers]]
